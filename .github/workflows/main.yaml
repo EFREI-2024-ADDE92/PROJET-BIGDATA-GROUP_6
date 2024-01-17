@@ -35,3 +35,17 @@ jobs:
             registry-password: ${{ secrets.REGISTRY_PASSWORD }}
             name: grp6-container
             location: 'france central'
+
+        - name: 'Deploy to Azure Container App'
+          uses: Azure/container-apps-deploy@v1
+          with:
+            name: 'your-container-app-name'
+            resource-group: ${{ secrets.AZURE_RESOURCE_GROUP }}
+            image: ${{ secrets.REGISTRY_LOGIN_SERVER }}/grp6:v1
+            registry-login-server: ${{ secrets.REGISTRY_LOGIN_SERVER }}
+            registry-username: ${{ secrets.REGISTRY_USERNAME }}
+            registry-password: ${{ secrets.REGISTRY_PASSWORD }}
+            os-type: 'linux'
+            cpu: 1.0
+            memory: 1.5
+            public: false
