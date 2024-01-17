@@ -27,11 +27,10 @@ jobs:
         - name: Build and deploy Container App
           uses: azure/container-apps-deploy-action@v1
           with:
+            login-server: ${{ secrets.REGISTRY_LOGIN_SERVER }}
+            registryUsername: ${{ secrets.REGISTRY_USERNAME }}
+            registryPassword: ${{ secrets.REGISTRY_PASSWORD }}
             containerAppName: grp6-container-app
             resourceGroup: ${{ secrets.RESOURCE_GROUP }}
             location: 'francecentral'
             imageToDeploy: ${{ secrets.REGISTRY_LOGIN_SERVER }}/grp6:v1
-            registryUsername: ${{ secrets.REGISTRY_USERNAME }}
-            registryPassword: ${{ secrets.REGISTRY_PASSWORD }}
-            
-        
