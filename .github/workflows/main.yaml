@@ -2,8 +2,7 @@ name: Iris model to Azure ACR
 
 on:
   push:
-    branches:
-      -main
+    branches: [main]
 
 jobs:
   build:
