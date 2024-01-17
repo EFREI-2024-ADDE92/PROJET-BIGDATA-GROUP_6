@@ -28,7 +28,7 @@ jobs:
           uses: azure/container-apps-deploy-action@v1
           with:
             appSourcePath: ${{ github.workspace }}
-            acrName: grp6-acr
+            acrName: efreibigdata
             containerAppName: grp6-container-app
             resourceGroup: ${{ secrets.RESOURCE_GROUP }}
             location: 'francecentral'
