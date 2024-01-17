@@ -28,10 +28,8 @@ jobs:
           uses: azure/container-apps-deploy-action@v1
           with:
             appSourcePath: ${{ github.workspace }}
-            acrName: efreibigdata
-            containerAppName: grp6-container-app
+            acrName: grp6
             resourceGroup: ${{ secrets.RESOURCE_GROUP }}
             location: 'francecentral'
-            imagetobuild: ${{ secrets.REGISTRY_LOGIN_SERVER }}/grp6:v1
 
         
