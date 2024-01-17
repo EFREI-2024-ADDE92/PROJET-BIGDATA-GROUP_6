@@ -1,27 +1,24 @@
-from flask import Flask, request, jsonify
 import joblib
+from fastapi import FastAPI, Request, HTTPException
+from pydantic import BaseModel
+import uvicorn
 
-app = Flask(__name__)
+app = FastAPI()
+model = joblib.load("knn-model.joblib")
 
-model_path = "knn-model.joblib"
+class IrisInput(BaseModel):
+    sepal_length: float
+    sepal_width: float
+    petal_length: float
+    petal_width: float
 
-# Chargemenet du modèle
-loaded_model = joblib.load(model_path)
+@app.post("/predict")
+def pred_iris(iris_input: IrisInput):
+    features = [
+        [iris_input.sepal_length, iris_input.sepal_width, iris_input.petal_length, iris_input.petal_width]
+    ]
+    pred = model.predict(features)
+    return {"prediction": int(pred[0])}
 
-@app.route('/')
-def index():
-    return "Bienvenue sur l'API Iris Prediction!"
-
-
-@app.route('/predict', methods=['GET', 'POST'])
-def predict():
-    data = request.get_json(force=True)
-    features = [data['feature1'], data['feature2'], data['feature3'], data['feature4']]
-    prediction = loaded_model.predict([features])[0]
-    return jsonify(prediction)
-
-if __name__ == '__main__':
-    app.run(port=8000)
-
-
-
+if __name__ == "__main__":
+    uvicorn.run(app, host="0.0.0.0", port=8000)
