@@ -30,7 +30,7 @@ jobs:
             registryUrl: ${{ secrets.REGISTRY_LOGIN_SERVER }}
             registryUsername: ${{ secrets.REGISTRY_USERNAME }}
             registryPassword: ${{ secrets.REGISTRY_PASSWORD }}
-            containerAppName: grp6-container-app
             resourceGroup: ${{ secrets.RESOURCE_GROUP }}
+            containerAppName: grp6-container-app
             location: 'francecentral'
             imageToDeploy: ${{ secrets.REGISTRY_LOGIN_SERVER }}/grp6:v1
