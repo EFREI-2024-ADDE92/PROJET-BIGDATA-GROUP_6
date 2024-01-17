@@ -5,11 +5,11 @@ jobs:
     build-and-deploy:
         runs-on: ubuntu-latest
         steps:
-        # checkout the repo
+
         - name: 'Checkout GitHub Action'
           uses: actions/checkout@main
           
-        - name: 'Login via Azure CLI'
+        - name: Log in to Azure
           uses: azure/login@v1
           with:
             creds: ${{ secrets.AZURE_CREDENTIALS }}
@@ -23,29 +23,13 @@ jobs:
         - run: |
             docker build . -t ${{ secrets.REGISTRY_LOGIN_SERVER }}/grp6:v1
             docker push ${{ secrets.REGISTRY_LOGIN_SERVER }}/grp6:v1
-
-        - name: 'Deploy to Azure Container Instances'
-          uses: 'azure/aci-deploy@v1'
+        
+        - name: Build and deploy Container App
+          uses: azure/container-apps-deploy-action@v1
           with:
-            resource-group: ${{ secrets.RESOURCE_GROUP }}
-            dns-name-label: ADDE92-CTP-grp6
-            image: ${{ secrets.REGISTRY_LOGIN_SERVER }}/grp6:v1
-            registry-login-server: ${{ secrets.REGISTRY_LOGIN_SERVER }}
-            registry-username: ${{ secrets.REGISTRY_USERNAME }}
-            registry-password: ${{ secrets.REGISTRY_PASSWORD }}
-            name: grp6-container
-            location: 'france central'
+            appSourcePath: ${{ github.workspace }}/src
+            acrName: grp6-arc
+            containerAppName: grp6-container-app
+            resourceGroup: ${{ secrets.RESOURCE_GROUP }}
 
-        - name: 'Deploy to Azure Container App'
-          uses: Azure/container-apps-deploy@v1
-          with:
-            name: 'your-container-app-name'
-            resource-group: ${{ secrets.AZURE_RESOURCE_GROUP }}
-            image: ${{ secrets.REGISTRY_LOGIN_SERVER }}/grp6:v1
-            registry-login-server: ${{ secrets.REGISTRY_LOGIN_SERVER }}
-            registry-username: ${{ secrets.REGISTRY_USERNAME }}
-            registry-password: ${{ secrets.REGISTRY_PASSWORD }}
-            os-type: 'linux'
-            cpu: 1.0
-            memory: 1.5
-            public: false
+        
