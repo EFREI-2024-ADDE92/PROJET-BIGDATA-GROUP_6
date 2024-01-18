@@ -7,6 +7,7 @@ COPY knn-model.joblib .
 
 RUN pip install scikit-learn
 RUN pip install joblib
+RUN pip install pydantic
 RUN pip install fastapi
 RUN pip install uvicorn
 
