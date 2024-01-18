@@ -31,14 +31,14 @@ jobs:
               registryUsername: ${{ secrets.REGISTRY_USERNAME }}
               registryPassword: ${{ secrets.REGISTRY_PASSWORD }}
               resourceGroup: ${{ secrets.RESOURCE_GROUP }}
-              containerAppName: grp6-container-app
-              containerAppEnvironment: grp6-container-app-env
+              containerAppName: grp6-container-app-v2
+              containerAppEnvironment: grp6-container-app-env-v2
               targetPort: 8000
               location: 'francecentral'
               imageToDeploy: ${{ secrets.REGISTRY_LOGIN_SERVER }}/grp6:v1
           - run: |
               az containerapp update \
-                --name grp6-container-app \
+                --name grp6-container-app-v2 \
                 --resource-group ${{ secrets.RESOURCE_GROUP }} \
                 --scale-rule-name http-scale-rule \
                 --scale-rule-http-concurrency 5 \
