@@ -44,4 +44,6 @@ jobs:
                 --scale-rule-http-concurrency 5 \
                 --min-replicas 0 \
                 --max-replicas 5 \
-                --target-utilization 80
+                --scale-rule-name azure-http-rule \
+                --scale-rule-type http \
+                --scale-rule-http-concurrency 100
