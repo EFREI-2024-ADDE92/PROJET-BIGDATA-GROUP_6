@@ -42,6 +42,6 @@ jobs:
                 --resource-group ${{ secrets.RESOURCE_GROUP }} \
                 --scale-rule-name http-scale-rule \
                 --scale-rule-http-concurrency 5 \
-                --min-replica-count 1 \
-                --max-replica-count 5 \
+                --min-replicas 0 \
+                --max-replicas 5 \
                 --target-utilization 80
