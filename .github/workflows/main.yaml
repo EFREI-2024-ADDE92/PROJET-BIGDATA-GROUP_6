@@ -46,4 +46,4 @@ jobs:
                 --scale-rule-http-concurrency 5 \
                 --min-replica-count 1 \
                 --max-replica-count 5 \
-                --target-utilization 8000
+                --target-utilization 80
