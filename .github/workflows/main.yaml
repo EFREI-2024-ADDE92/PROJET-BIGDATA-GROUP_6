@@ -14,7 +14,7 @@ jobs:
       uses: actions/checkout@main
 
     -  name: Validate Dockerfile
-      run: |
+       run: |
         docker run --rm -i hadolint/hadolint:v2.7.0 hadolint --ignore SC2046 --ignore SC2039 - < Dockerfile
     
     - name: Log in to Azure
