@@ -8,6 +8,14 @@ jobs:
 
           - name: 'Checkout GitHub Action'
             uses: actions/checkout@main
+
+          - name: Install hadolint
+            run: |
+              curl -sSL -o /usr/bin/hadolint https://github.com/hadolint/hadolint/releases/download/v2.7.0/hadolint-Linux-x86_64
+              chmod +x /usr/bin/hadolint
+
+          - name: Lint Dockerfile
+            run: hadolint Dockerfile
             
           - name: Log in to Azure
             uses: azure/login@v1
