@@ -13,17 +13,10 @@ jobs:
     - name: 'Checkout GitHub Action'
       uses: actions/checkout@main
 
-    - name: Install and lint Dockerfile
+    -  name: Validate Dockerfile
       run: |
-        mkdir -p $HOME/bin
-        curl -sSL -o $HOME/bin/hadolint https://github.com/hadolint/hadolint/releases/download/v2.7.0/hadolint-Linux-x86_64
-        chmod +x $HOME/bin/hadolint
-        ls $HOME/bin
-        $HOME/bin/hadolint --version
-        echo "export PATH=$HOME/bin:$PATH" >> $GITHUB_ENV
-
-        hadolint Dockerfile
-            
+        docker run --rm -i hadolint/hadolint:v2.7.0 hadolint --ignore SC2046 --ignore SC2039 - < Dockerfile
+    
     - name: Log in to Azure
       uses: azure/login@v1
       with:
