@@ -1,57 +1,67 @@
-on: [push]
 name: Iris model to Azure ACR
 
+on:
+  push:
+    branches:
+      - main
+
 jobs:
-    build-and-deploy:
-        runs-on: ubuntu-latest
-        steps:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+    steps:
 
-          - name: 'Checkout GitHub Action'
-            uses: actions/checkout@main
+    - name: 'Checkout GitHub Action'
+      uses: actions/checkout@main
 
-          - name: Install hadolint
-            run: |
-              curl -sSL -o /usr/bin/hadolint https://github.com/hadolint/hadolint/releases/download/v2.7.0/hadolint-Linux-x86_64
-              chmod +x /usr/bin/hadolint
+    - name: Install hadolint
+      run: |
+        mkdir -p $HOME/bin
+        curl -sSL -o $HOME/bin/hadolint https://github.com/hadolint/hadolint/releases/download/v2.7.0/hadolint-Linux-x86_64
+        chmod +x $HOME/bin/hadolint
+        ls $HOME/bin
+        $HOME/bin/hadolint --version
+        echo "export PATH=$HOME/bin:$PATH" >> $GITHUB_ENV
 
-          - name: Lint Dockerfile
-            run: hadolint Dockerfile
+    - name: Lint Dockerfile
+      run: hadolint Dockerfile
             
-          - name: Log in to Azure
-            uses: azure/login@v1
-            with:
-              creds: ${{ secrets.AZURE_CREDENTIALS }}
-          
-          - name: 'Build and push image'
-            uses: azure/docker-login@v1
-            with:
-              login-server: ${{ secrets.REGISTRY_LOGIN_SERVER }}
-              username: ${{ secrets.REGISTRY_USERNAME }}
-              password: ${{ secrets.REGISTRY_PASSWORD }}
-          - run: |
-              docker build . -t ${{ secrets.REGISTRY_LOGIN_SERVER }}/grp6:v1
-              docker push ${{ secrets.REGISTRY_LOGIN_SERVER }}/grp6:v1
-          
-          - name: Build and deploy Container App
-            uses: azure/container-apps-deploy-action@v1
-            with:
-              registryUrl: ${{ secrets.REGISTRY_LOGIN_SERVER }}
-              registryUsername: ${{ secrets.REGISTRY_USERNAME }}
-              registryPassword: ${{ secrets.REGISTRY_PASSWORD }}
-              resourceGroup: ${{ secrets.RESOURCE_GROUP }}
-              containerAppName: grp6-container-app-v2
-              containerAppEnvironment: grp6-container-app-env-v2
-              targetPort: 8000
-              location: 'francecentral'
-              imageToDeploy: ${{ secrets.REGISTRY_LOGIN_SERVER }}/grp6:v1
-          - run: |
-              az containerapp update \
-                --name grp6-container-app-v2 \
-                --resource-group ${{ secrets.RESOURCE_GROUP }} \
-                --scale-rule-name http-scale-rule \
-                --scale-rule-http-concurrency 5 \
-                --min-replicas 0 \
-                --max-replicas 5 \
-                --scale-rule-name azure-http-rule \
-                --scale-rule-type http \
-                --scale-rule-http-concurrency 100
+    - name: Log in to Azure
+      uses: azure/login@v1
+      with:
+        creds: ${{ secrets.AZURE_CREDENTIALS }}
+      
+    - name: 'Build and push image'
+      uses: azure/docker-login@v1
+      with:
+        login-server: ${{ secrets.REGISTRY_LOGIN_SERVER }}
+        username: ${{ secrets.REGISTRY_USERNAME }}
+        password: ${{ secrets.REGISTRY_PASSWORD }}
+    - run: |
+        docker build . -t ${{ secrets.REGISTRY_LOGIN_SERVER }}/grp6:v1
+        docker push ${{ secrets.REGISTRY_LOGIN_SERVER }}/grp6:v1
+    
+    - name: Build and deploy Container App
+      uses: azure/container-apps-deploy-action@v1
+      with:
+        registryUrl: ${{ secrets.REGISTRY_LOGIN_SERVER }}
+        registryUsername: ${{ secrets.REGISTRY_USERNAME }}
+        registryPassword: ${{ secrets.REGISTRY_PASSWORD }}
+        resourceGroup: ${{ secrets.RESOURCE_GROUP }}
+        containerAppName: grp6-container-app-v2
+        containerAppEnvironment: grp6-container-app-env-v2
+        targetPort: 8000
+        location: 'francecentral'
+        imageToDeploy: ${{ secrets.REGISTRY_LOGIN_SERVER }}/grp6:v1
+
+    - run: |
+        az containerapp update \
+          --name grp6-container-app-v2 \
+          --resource-group ${{ secrets.RESOURCE_GROUP }} \
+          --scale-rule-name http-scale-rule \
+          --scale-rule-http-concurrency 5 \
+          --min-replicas 0 \
+          --max-replicas 5 \
+          --scale-rule-name azure-http-rule \
+          --scale-rule-type http \
+          --scale-rule-http-concurrency 100
+
