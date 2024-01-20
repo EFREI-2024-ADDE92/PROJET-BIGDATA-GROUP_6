@@ -13,7 +13,7 @@ jobs:
     - name: 'Checkout GitHub Action'
       uses: actions/checkout@main
 
-    - name: Install hadolint
+    - name: Install and lint Dockerfile
       run: |
         mkdir -p $HOME/bin
         curl -sSL -o $HOME/bin/hadolint https://github.com/hadolint/hadolint/releases/download/v2.7.0/hadolint-Linux-x86_64
@@ -22,8 +22,7 @@ jobs:
         $HOME/bin/hadolint --version
         echo "export PATH=$HOME/bin:$PATH" >> $GITHUB_ENV
 
-    - name: Lint Dockerfile
-      run: hadolint Dockerfile
+        hadolint Dockerfile
             
     - name: Log in to Azure
       uses: azure/login@v1
@@ -64,4 +63,3 @@ jobs:
           --scale-rule-name azure-http-rule \
           --scale-rule-type http \
           --scale-rule-http-concurrency 100
-
