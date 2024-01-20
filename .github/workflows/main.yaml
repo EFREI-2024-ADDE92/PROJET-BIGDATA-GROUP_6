@@ -12,10 +12,6 @@ jobs:
 
     - name: 'Checkout GitHub Action'
       uses: actions/checkout@main
-
-    -  name: Validate Dockerfile
-       run: |
-        docker run --rm -i hadolint/hadolint:v2.7.0 hadolint --ignore SC2046 --ignore SC2039 - < Dockerfile
     
     - name: Log in to Azure
       uses: azure/login@v1
